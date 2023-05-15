@@ -1456,25 +1456,32 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, UNUSED int flags, int arg
 	while (response->code == PW_ACCESS_CHALLENGE) {
 		attribute_t *a_state, *a_reply, *a_prompt;
 		char challenge[BUFFER_SIZE];
-    	int prompt;       
+    	int prompt;
+		a_state = find_attribute(response, PW_STATE)  
+		a_reply = find_attribute(response, PW_REPLY_MESSAGE)   
 
-		/* Now we do a bit more work: challenge the user, and get a response */
+		// Ignoring state for AuthLogic Radius Server
+
+		/* Now we do a bit more work: challenge the user, and get a response 
 		if (((a_state = find_attribute(response, PW_STATE)) == NULL) ||
 		    ((a_reply = find_attribute(response, PW_REPLY_MESSAGE)) == NULL)) {
-			/* Actually, State isn't required. */
+			/* Actually, State isn't required. 
 			_pam_log(LOG_ERR, "RADIUS Access-Challenge received with State or Reply-Message missing");
 			retval = PAM_AUTHINFO_UNAVAIL;
 			goto do_next;
 		}
+		*/
 
 		/*
 		 *	Security fixes.
 		 */
+		 /*
 		if ((a_state->length <= 2) || (a_reply->length <= 2)) {
 			_pam_log(LOG_ERR, "RADIUS Access-Challenge received with invalid State or Reply-Message");
 			retval = PAM_AUTHINFO_UNAVAIL;
 			goto do_next;
 		}
+		*/
 
 		memcpy(challenge, a_reply->data, a_reply->length - 2);
 		challenge[a_reply->length - 2] = 0;
@@ -1506,8 +1513,10 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, UNUSED int flags, int arg
 			add_attribute(request, PW_CALLING_STATION_ID, (const uint8_t *) rhost, strlen(rhost));
 		}
 
-		/* copy the state over from the servers response */
+		// Ignoring state for AuthLogic Radius Server
+		/* copy the state over from the servers response 
 		add_attribute(request, PW_STATE, a_state->data, a_state->length - 2);
+		*/
 
 		retval = talk_radius(&config, request, response, resp2challenge, NULL, 1);
 		PAM_FAIL_CHECK;
