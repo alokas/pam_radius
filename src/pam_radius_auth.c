@@ -1457,8 +1457,8 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, UNUSED int flags, int arg
 		attribute_t *a_state, *a_reply, *a_prompt;
 		char challenge[BUFFER_SIZE];
     	int prompt;
-		a_state = find_attribute(response, PW_STATE)  
-		a_reply = find_attribute(response, PW_REPLY_MESSAGE)   
+		a_state = find_attribute(response, PW_STATE); 
+		a_reply = find_attribute(response, PW_REPLY_MESSAGE);  
 
 		// Ignoring state for AuthLogic Radius Server
 
